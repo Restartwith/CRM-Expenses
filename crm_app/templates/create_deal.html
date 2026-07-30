@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Create Deal{% endblock %}
+
+{% block content %}
+  <h1>Create Deal</h1>
+  <form method="post" action="/create-deal">
+    <label for="deal_name">Deal Name</label>
+    <input type="text" id="deal_name" name="deal_name" required>
+
+    <label for="amount">Amount</label>
+    <input type="number" step="0.01" id="amount" name="amount">
+
+    <label for="stage">Stage</label>
+    <input type="text" id="stage" name="stage">
+
+    <button type="submit">Save Deal</button>
+  </form>
+{% endblock %}

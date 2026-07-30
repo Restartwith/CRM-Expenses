@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h1 class="card-title">Welcome to the CRM Dashboard</h1>
+        <p class="card-text text-muted">Use the navigation above to manage leads, contacts, deals, and view reports.</p>
+        <div class="row g-3 my-4">
+          <div class="col-12 col-md-4">
+            <div class="card bg-white border-0 rounded-4 shadow-sm h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <div>
+                    <h6 class="text-uppercase text-muted mb-2">Leads</h6>
+                    <div class="fs-4 fw-semibold">{{ summary_counts.leads }}</div>
+                  </div>
+                  <div class="text-primary fs-2">👥</div>
+                </div>
+                <span class="badge bg-primary mb-3">Active</span>
+                <p class="text-muted mb-3">Open leads in your pipeline.</p>
+                <a href="/leads" class="btn btn-primary">View Leads</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="card bg-white border-0 rounded-4 shadow-sm h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <div>
+                    <h6 class="text-uppercase text-muted mb-2">Contacts</h6>
+                    <div class="fs-4 fw-semibold">{{ summary_counts.contacts }}</div>
+                  </div>
+                  <div class="text-success fs-2">📇</div>
+                </div>
+                <span class="badge bg-success mb-3">Saved</span>
+                <p class="text-muted mb-3">Total contacts in the CRM.</p>
+                <a href="/contacts" class="btn btn-success">View Contacts</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="card bg-white border-0 rounded-4 shadow-sm h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <div>
+                    <h6 class="text-uppercase text-muted mb-2">Deals</h6>
+                    <div class="fs-4 fw-semibold">{{ summary_counts.deals }}</div>
+                  </div>
+                  <div class="text-warning fs-2">💼</div>
+                </div>
+                <span class="badge bg-warning text-dark mb-3">Pipeline</span>
+                <p class="text-muted mb-3">Deals currently being tracked.</p>
+                <a href="/deals" class="btn btn-warning text-dark">View Deals</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <div class="card bg-white border-0 rounded-4 shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title">Quick Actions</h5>
+                <p class="text-muted mb-3">Create new CRM records fast.</p>
+                <div class="d-grid gap-2">
+                  <a href="/create-lead" class="btn btn-outline-primary">Create Lead</a>
+                  <a href="/create-contact" class="btn btn-outline-success">Create Contact</a>
+                  <a href="/create-deal" class="btn btn-outline-warning text-dark">Create Deal</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-8">
+            <div class="card bg-white border-0 rounded-4 shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title">CRM Overview</h5>
+                <p class="text-muted">Access your most important CRM workflows directly from the dashboard. Use these shortcuts to add new sales leads, contacts, and deals in one click.</p>
+                <div class="row g-3 mt-4">
+                  <div class="col-12 col-sm-4">
+                    <div class="p-3 bg-light rounded-4 text-center">
+                      <div class="fw-semibold text-uppercase text-muted">Leads</div>
+                      <div class="fs-4 fw-bold">{{ summary_counts.leads }}</div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-4">
+                    <div class="p-3 bg-light rounded-4 text-center">
+                      <div class="fw-semibold text-uppercase text-muted">Contacts</div>
+                      <div class="fs-4 fw-bold">{{ summary_counts.contacts }}</div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-4">
+                    <div class="p-3 bg-light rounded-4 text-center">
+                      <div class="fw-semibold text-uppercase text-muted">Deals</div>
+                      <div class="fs-4 fw-bold">{{ summary_counts.deals }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

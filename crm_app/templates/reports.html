@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+  <h1>Reports</h1>
+
+  <section>
+    <h2>Lead Status Chart</h2>
+    <canvas id="leadStatusChart" width="400" height="220"></canvas>
+  </section>
+
+  <section style="margin-top: 2rem;">
+    <h2>Deal Stage Chart</h2>
+    <canvas id="dealStageChart" width="400" height="220"></canvas>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const leadStatusData = {{ lead_status_counts | tojson }};
+    const dealStageData = {{ deal_stage_totals | tojson }};
+
+    const leadLabels = leadStatusData.map(item => item.status);
+    const leadValues = leadStatusData.map(item => item.count);
+
+    new Chart(document.getElementById('leadStatusChart'), {
+      type: 'pie',
+      data: {
+        labels: leadLabels,
+        datasets: [{
+          data: leadValues,
+          backgroundColor: ['#4e79a7', '#f28e2b', '#59a14f', '#e15759']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+
+    const dealLabels = dealStageData.map(item => item.stage);
+    const dealValues = dealStageData.map(item => item.total);
+
+    new Chart(document.getElementById('dealStageChart'), {
+      type: 'bar',
+      data: {
+        labels: dealLabels,
+        datasets: [{
+          label: 'Total Amount',
+          data: dealValues,
+          backgroundColor: '#76b7b2'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '$' + value;
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
+{% endblock %}

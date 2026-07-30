@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Deals{% endblock %}
+
+{% block content %}
+  <h1>Deals</h1>
+  {% if deals %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Deal Name</th>
+          <th>Amount</th>
+          <th>Stage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for deal in deals %}
+          <tr>
+            <td>{{ deal.id }}</td>
+            <td>{{ deal.deal_name }}</td>
+            <td>{{ deal.amount }}</td>
+            <td>{{ deal.stage }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No deals found.</p>
+  {% endif %}
+{% endblock %}

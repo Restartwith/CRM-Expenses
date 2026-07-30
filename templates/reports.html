@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-small mb-3">
+            <li class="breadcrumb-item"><a href="/">🏠 Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">📊 Reports</li>
+          </ol>
+        </nav>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+          <div>
+            <h2 class="card-title mb-1">Reports</h2>
+            <p class="text-muted mb-0">Visualize lead status and deal stage totals from your CRM data.</p>
+          </div>
+          <a href="/" class="btn btn-secondary">Back</a>
+        </div>
+        <div class="row gy-4">
+          <div class="col-12 col-lg-6">
+            <div class="card border-primary h-100 rounded-4 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <div>
+                    <h5 class="card-title mb-1">Lead Status Chart</h5>
+                    <p class="text-muted mb-0">Current lead status breakdown.</p>
+                  </div>
+                  <span class="badge bg-primary">Status</span>
+                </div>
+                <div class="ratio ratio-4x3">
+                  <canvas id="leadStatusChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="card border-success h-100 rounded-4 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <div>
+                    <h5 class="card-title mb-1">Deal Stage Chart</h5>
+                    <p class="text-muted mb-0">Value by deal stage across the pipeline.</p>
+                  </div>
+                  <span class="badge bg-success">Value</span>
+                </div>
+                <div class="ratio ratio-4x3">
+                  <canvas id="dealStageChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+  const leadStatusData = {{ lead_status_counts | tojson }};
+  const dealStageData = {{ deal_stage_totals | tojson }};
+  renderPieChart('leadStatusChart', leadStatusData.map(item => item.status), leadStatusData.map(item => item.count));
+  renderBarChart('dealStageChart', dealStageData.map(item => item.stage), dealStageData.map(item => item.total));
+</script>
+{% endblock %}
