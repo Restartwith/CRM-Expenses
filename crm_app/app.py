@@ -7,7 +7,7 @@ import re
 import sqlite3
 import zipfile
 from calendar import monthrange
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from cryptography.fernet import Fernet
@@ -19,6 +19,7 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, send_file, session, url_for
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
+from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 
 from crm_app.config import Config
@@ -76,11 +77,15 @@ def _decrypt_value(value):
         return value
 
 
+def _current_utc_isoformat():
+    return datetime.now(timezone.utc).isoformat()
+
+
 def log_audit_event(user_id, action, entity_type, entity_id=None, details=None):
     conn = get_db_connection()
     conn.execute(
         "INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-        (user_id, action, entity_type, entity_id, details, datetime.utcnow().isoformat()),
+        (user_id, action, entity_type, entity_id, details, _current_utc_isoformat()),
     )
     conn.commit()
     conn.close()
@@ -104,6 +109,24 @@ def enforce_role_permissions():
             return jsonify({"error": "Forbidden"}), 403
 
     return None
+
+
+@app.errorhandler(Exception)
+def handle_unexpected_error(error):
+    status_code = 500
+    message = "An unexpected error occurred."
+
+    if isinstance(error, HTTPException):
+        status_code = error.code
+        message = error.description
+
+    app.logger.exception("Unhandled exception")
+
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        return jsonify({"success": False, "error": message}), status_code
+
+    return render_template("error.html", status_code=status_code, message=message), status_code
+
 
 TRANSLATIONS = {
     "en": {
@@ -1677,7 +1700,7 @@ def backup_export_api():
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("database.sqlite", DB_PATH.read_bytes() if DB_PATH.exists() else b"")
-        archive.writestr("metadata.json", json.dumps({"exported_at": datetime.utcnow().isoformat()}))
+        archive.writestr("metadata.json", json.dumps({"exported_at": _current_utc_isoformat()}))
     buffer.seek(0)
     return send_file(buffer, download_name="backup.zip", mimetype="application/zip")
 
