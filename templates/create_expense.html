@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Create Expense{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h1 class="h3 mb-1">{{ t('edit_expense_heading') if edit_mode else t('create_expense_heading') }}</h1>
+            <p class="text-muted mb-0">{{ t('edit_expense_subtitle') if edit_mode else t('create_expense_subtitle') }}</p>
+          </div>
+          <a href="/expenses" class="btn btn-outline-secondary">{{ t('view_expenses') }}</a>
+        </div>
+
+        <div class="alert alert-light border mb-4">
+          <strong>{{ t('tip') }}:</strong> {{ t('tip_text') }}
+        </div>
+
+        <form method="post">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ t('title') }}</label>
+              <input class="form-control" name="title" placeholder="Rent, Groceries, Travel..." required value="{{ expense.title if expense else '' }}">
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ t('amount') }}</label>
+              <input class="form-control" type="number" step="0.01" name="amount" value="{{ expense.amount if expense else '0.00' }}" placeholder="0.00" required>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ t('category') }}</label>
+              <input class="form-control" name="category" placeholder="Housing, Food, Travel..." required value="{{ expense.category if expense else '' }}">
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ t('payment_mode') }}</label>
+              <select class="form-control" name="payment_mode">
+                <option value="Cash" {% if expense and expense.payment_mode == 'Cash' %}selected{% endif %}>Cash</option>
+                <option value="UPI" {% if expense and expense.payment_mode == 'UPI' %}selected{% endif %}>UPI</option>
+                <option value="Card" {% if expense and expense.payment_mode == 'Card' %}selected{% endif %}>Card</option>
+                <option value="Bank Transfer" {% if expense and expense.payment_mode == 'Bank Transfer' %}selected{% endif %}>Bank Transfer</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ t('date') }}</label>
+              <input class="form-control" type="date" name="date" value="{{ expense.expense_date if expense else today }}" required>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ t('frequency') }}</label>
+              <select class="form-control" name="frequency">
+                <option value="One-time" {% if expense and expense.frequency == 'One-time' %}selected{% endif %}>One-time</option>
+                <option value="Daily" {% if expense and expense.frequency == 'Daily' %}selected{% endif %}>Daily</option>
+                <option value="Weekly" {% if expense and expense.frequency == 'Weekly' %}selected{% endif %}>Weekly</option>
+                <option value="Monthly" {% if expense and expense.frequency == 'Monthly' %}selected{% endif %}>Monthly</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">{{ t('notes') }}</label>
+              <textarea class="form-control" name="notes" rows="4" placeholder="Add details, invoices, or a quick note">{{ expense.notes if expense else '' }}</textarea>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">Split details</label>
+              <textarea class="form-control" name="split_details" rows="3" placeholder="Food:600; Travel:300">{{ split_details if expense else '' }}</textarea>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">Tags</label>
+              <input class="form-control" name="tags" placeholder="food, friends, work" value="{{ tags_value if expense else '' }}">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Custom fields</label>
+              <textarea class="form-control" name="custom_fields" rows="3" placeholder="location:Cafe; project:Trip">{{ custom_fields_value if expense else '' }}</textarea>
+            </div>
+          </div>
+          <div class="d-flex gap-2 mt-4">
+            <button class="btn btn-primary" type="submit">{{ t('save_expense') if not edit_mode else t('update_expense') }}</button>
+            <a href="/" class="btn btn-outline-secondary">{{ t('back_to_dashboard') }}</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
